@@ -4,6 +4,7 @@ const readline = require("readline");
 
 const app = express();
 app.listen(3000, () => {});
+let todos = [];
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -18,7 +19,6 @@ function askUser() {
       console.log(`You entered: ${answer}`);
 
       // Array to store the to-do items
-      let todos = [];
       var todoId = 0;
       var args = answer.split(" ").slice(2);
       console.log(args);
@@ -26,6 +26,7 @@ function askUser() {
       const ADD = "add";
       const LIST = "list";
       const EDIT = "edit";
+      const DELETE = "delete";
       const COMPLETE = "complete";
       const SEARCH = "search";
 
@@ -49,18 +50,21 @@ function askUser() {
         let isCompleted = "Incomplete";
         let todoItem = {};
         if (newTodo) {
-          todoItem = {
-            todoId: todoId,
-            newTodo: newTodo,
-            isCompleted: isCompleted,
-          };
-          todos.push(todoItem);
+          todoItem = [
+            {
+              todoId: todoId,
+              newTodo: newTodo,
+              isCompleted: isCompleted,
+            },
+          ];
+          todos.push(...todoItem);
+          console.log(todos);
         } else {
           console.log("todo item cannot be empty");
         }
 
         // Convert the JSON object to a JSON string
-        const jsonString = JSON.stringify(todoItem, null, 2); // The `null, 2` parameters format the JSON with 2 spaces for indentation
+        const jsonString = JSON.stringify(todos, null, 2); // The `null, 2` parameters format the JSON with 2 spaces for indentation
 
         fs.writeFile("todo.json", jsonString, "utf8", (err) => {
           if (err) {
@@ -100,6 +104,23 @@ function askUser() {
         readFile();
       };
 
+      const deleteTodo = () => {
+        const jsonFileContents = fs.readFileSync("todo.json", "utf8");
+        // Parse the JSON content into a JavaScript object
+        const jsonData = JSON.parse(jsonFileContents);
+        let filtered = jsonData.filter((x) => x.todoId.toString() !== args[1]);
+        console.log(filtered);
+
+        const jsonString = JSON.stringify(filtered, null, 2); // The `null, 2` parameters format the JSON with 2 spaces for indentation
+        fs.writeFile("todo.json", jsonString, "utf8", (err) => {
+          if (err) {
+            console.error("Error writing to the file:", err);
+            return;
+          }
+          console.log("File updated successfully");
+        });
+      };
+
       switch (operation) {
         case ADD:
           addTodo();
@@ -109,6 +130,9 @@ function askUser() {
           break;
         case EDIT:
           editTodo();
+          break;
+        case DELETE:
+          deleteTodo();
           break;
         case COMPLETE:
           completeTodo();
