@@ -47,8 +47,9 @@ function askUser() {
         todoId = Math.floor(Math.random() * 1000) + 1;
         const newTodo = args[1];
         let isCompleted = "Incomplete";
+        let todoItem = {};
         if (newTodo) {
-          let todoItem = {
+          todoItem = {
             todoId: todoId,
             newTodo: newTodo,
             isCompleted: isCompleted,
@@ -79,6 +80,9 @@ function askUser() {
         if (secondArg === "complete") {
           let filtered = jsonData.filter((x) => x.isCompleted === "Completed");
           console.log(filtered);
+        } else if (secondArg === "incomplete") {
+          let filtered = jsonData.filter((x) => x.isCompleted === "Incomplete");
+          console.log(filtered);
         } else {
           console.log(jsonData);
         }
@@ -86,23 +90,14 @@ function askUser() {
 
       const editTodo = () => {
         readFile();
-        if (!args[1] && args[1] === "complete") {
-          // filter complete task logic here
-        }
       };
 
       const completeTodo = () => {
         readFile();
-        if (!args[1] && args[1] === "complete") {
-          // filter complete task logic here
-        }
       };
 
       const searchTodo = () => {
         readFile();
-        if (!args[1] && args[1] === "complete") {
-          // filter complete task logic here
-        }
       };
 
       switch (operation) {
