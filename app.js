@@ -1,64 +1,131 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-const ejs = require("ejs");
-const app = express();
 const fs = require("fs");
+const readline = require("readline");
 
-app.set("view engine", "ejs");
-app.use(bodyParser.urlencoded({ extended: true }));
+const app = express();
+app.listen(3000, () => {});
 
-// Array to store the to-do items
-let todos = [];
-var todoId = 0;
-
-app.get("/", (req, res) => {
-  res.render("index", { todos: todos });
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
 });
 
-app.post("/add", (req, res) => {
-  todoId++;
-  const newTodo = req.body.newTodo;
-  let isCompleted = false;
-  let todoItem = { todoId: todoId, newTodo: newTodo, isCompleted: isCompleted };
+function askUser() {
+  rl.question('Enter something (or type "q" to quit): ', (answer) => {
+    if (answer.toLowerCase() === "q") {
+      rl.close(); // Close the readline interface to exit the program
+    } else {
+      console.log(`You entered: ${answer}`);
 
-  addTodo(todoItem);
-  res.redirect("/");
-});
+      // Array to store the to-do items
+      let todos = [];
+      var todoId = 0;
+      var args = answer.split(" ").slice(2);
+      console.log(args);
+      // Operations
+      const ADD = "add";
+      const LIST = "list";
+      const EDIT = "edit";
+      const COMPLETE = "complete";
+      const SEARCH = "search";
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
-});
+      let operation = args[0];
+      let secondArg = args[1];
 
-readFile = () => {
-  fs.readFile("todo.txt", "utf8", (err, data) => {
-    if (err) {
-      console.error("Error reading the file:", err);
-      return;
-    }
-    // Now you have the file content in the 'data' variable
-    // You can edit 'data' here
-    console.log(data);
-  });
-};
+      readFile = () => {
+        fs.readFile("todo.json", "utf8", (err, data) => {
+          if (err) {
+            console.error("Error reading the file:", err);
+            return;
+          }
+          // Now you have the file content in the 'data' variable
+          // You can edit 'data' here
+        });
+      };
 
-readFile();
+      const addTodo = () => {
+        todoId = Math.floor(Math.random() * 1000) + 1;
+        const newTodo = args[1];
+        let isCompleted = "Incomplete";
+        if (newTodo) {
+          let todoItem = {
+            todoId: todoId,
+            newTodo: newTodo,
+            isCompleted: isCompleted,
+          };
+          todos.push(todoItem);
+        } else {
+          console.log("todo item cannot be empty");
+        }
 
-addTodo = (todoItem) => {
-  fs.readFile("todo.txt", "utf8", (err, data) => {
-    if (err) {
-      console.error("Error reading the file:", err);
-      return;
-    }
-    data += `${todoItem.todoId.toString()} ${todoItem.newTodo} ${
-      todoItem.isCompleted
-    }\n`;
+        // Convert the JSON object to a JSON string
+        const jsonString = JSON.stringify(todoItem, null, 2); // The `null, 2` parameters format the JSON with 2 spaces for indentation
 
-    fs.writeFile("todo.txt", data, "utf8", (err) => {
-      if (err) {
-        console.error("Error writing to the file:", err);
-        return;
+        fs.writeFile("todo.json", jsonString, "utf8", (err) => {
+          if (err) {
+            console.error("Error writing to the file:", err);
+            return;
+          }
+          console.log("File updated successfully");
+        });
+      };
+
+      const listTodo = () => {
+        readFile();
+        // Read the JSON file
+        const jsonFileContents = fs.readFileSync("todo.json", "utf8");
+        // Parse the JSON content into a JavaScript object
+        const jsonData = JSON.parse(jsonFileContents);
+        if (secondArg === "complete") {
+          let filtered = jsonData.filter((x) => x.isCompleted === "Completed");
+          console.log(filtered);
+        } else {
+          console.log(jsonData);
+        }
+      };
+
+      const editTodo = () => {
+        readFile();
+        if (!args[1] && args[1] === "complete") {
+          // filter complete task logic here
+        }
+      };
+
+      const completeTodo = () => {
+        readFile();
+        if (!args[1] && args[1] === "complete") {
+          // filter complete task logic here
+        }
+      };
+
+      const searchTodo = () => {
+        readFile();
+        if (!args[1] && args[1] === "complete") {
+          // filter complete task logic here
+        }
+      };
+
+      switch (operation) {
+        case ADD:
+          addTodo();
+          break;
+        case LIST:
+          listTodo();
+          break;
+        case EDIT:
+          editTodo();
+          break;
+        case COMPLETE:
+          completeTodo();
+          break;
+        case SEARCH:
+          searchTodo();
+          break;
       }
-      console.log("File updated successfully");
-    });
+
+      askUser(); // Ask the user again
+    }
   });
-};
+}
+
+askUser(); // Start the input loop
