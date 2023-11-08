@@ -76,7 +76,6 @@ function askUser() {
       };
 
       const listTodo = () => {
-        readFile();
         // Read the JSON file
         const jsonFileContents = fs.readFileSync("todo.json", "utf8");
         // Parse the JSON content into a JavaScript object
@@ -97,11 +96,28 @@ function askUser() {
       };
 
       const completeTodo = () => {
-        readFile();
+        const jsonFileContents = fs.readFileSync("todo.json", "utf8");
+        // Parse the JSON content into a JavaScript object
+        const jsonData = JSON.parse(jsonFileContents);
+        let filtered = jsonData.filter((x) => x.todoId.toString() === args[1]);
+        console.log(filtered);
+
+        const jsonString = JSON.stringify(filtered, null, 2); // The `null, 2` parameters format the JSON with 2 spaces for indentation
+        fs.writeFile("todo.json", jsonString, "utf8", (err) => {
+          if (err) {
+            console.error("Error writing to the file:", err);
+            return;
+          }
+          console.log("File updated successfully");
+        });
       };
 
       const searchTodo = () => {
-        readFile();
+        const jsonFileContents = fs.readFileSync("todo.json", "utf8");
+        // Parse the JSON content into a JavaScript object
+        const jsonData = JSON.parse(jsonFileContents);
+        let found = jsonData.find((el) => el.newTodo.includes(args[1]));
+        console.log(found);
       };
 
       const deleteTodo = () => {
