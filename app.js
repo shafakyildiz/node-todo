@@ -21,7 +21,15 @@ function askUser() {
       // Array to store the to-do items
       var todoId = 0;
       var args = answer.split(" ").slice(2);
-      console.log(args);
+      console.log(answer);
+
+      function findFirstOccurance(str) {
+        const matches = str.split('"');
+        return matches[1] ? matches[1] : str;
+      }
+
+      let inputStr = findFirstOccurance(answer);
+      console.log("inputStr", inputStr);
       // Operations
       const ADD = "add";
       const LIST = "list";
@@ -46,7 +54,7 @@ function askUser() {
 
       const addTodo = () => {
         todoId = Math.floor(Math.random() * 1000) + 1;
-        const newTodo = args[1];
+        const newTodo = inputStr;
         let isCompleted = "Incomplete";
         let todoItem = {};
         if (newTodo) {
@@ -102,6 +110,10 @@ function askUser() {
         let filtered = jsonData.filter((x) => x.todoId.toString() === args[1]);
         console.log(filtered);
 
+        if (filtered) {
+          filtered.isCompleted = "Completed";
+        }
+
         const jsonString = JSON.stringify(filtered, null, 2); // The `null, 2` parameters format the JSON with 2 spaces for indentation
         fs.writeFile("todo.json", jsonString, "utf8", (err) => {
           if (err) {
@@ -116,7 +128,7 @@ function askUser() {
         const jsonFileContents = fs.readFileSync("todo.json", "utf8");
         // Parse the JSON content into a JavaScript object
         const jsonData = JSON.parse(jsonFileContents);
-        let found = jsonData.find((el) => el.newTodo.includes(args[1]));
+        let found = jsonData.find((el) => el.newTodo.includes(inputStr));
         console.log(found);
       };
 
@@ -124,7 +136,7 @@ function askUser() {
         const jsonFileContents = fs.readFileSync("todo.json", "utf8");
         // Parse the JSON content into a JavaScript object
         const jsonData = JSON.parse(jsonFileContents);
-        let filtered = jsonData.filter((x) => x.todoId.toString() !== args[1]);
+        let filtered = jsonData.filter((x) => x.todoId.toString() !== inputStr);
         console.log(filtered);
 
         const jsonString = JSON.stringify(filtered, null, 2); // The `null, 2` parameters format the JSON with 2 spaces for indentation

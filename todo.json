@@ -1,22 +1,12 @@
 [
   {
-    "todoId": 360,
-    "newTodo": "afdsf",
+    "todoId": 530,
+    "newTodo": "multi word todo",
     "isCompleted": "Incomplete"
   },
   {
-    "todoId": 322,
-    "newTodo": "afdsf",
-    "isCompleted": "Incomplete"
-  },
-  {
-    "todoId": 120,
-    "newTodo": "ekinu",
-    "isCompleted": "Incomplete"
-  },
-  {
-    "todoId": 430,
-    "newTodo": "safaku",
+    "todoId": 942,
+    "newTodo": "multi word todo",
     "isCompleted": "Incomplete"
   }
 ]
