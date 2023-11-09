@@ -29,7 +29,6 @@ function askUser() {
       }
 
       let inputStr = findFirstOccurance(answer);
-      console.log("inputStr", inputStr);
       // Operations
       const ADD = "add";
       const LIST = "list";
