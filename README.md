@@ -4,7 +4,8 @@ It uses a JSON file as a database. You may think this as a retro program which m
 
 How to run the program:
 
-`npm install`
+`npm install` then run
+`node app.js` command
 
 One may try the commands like below:
 
