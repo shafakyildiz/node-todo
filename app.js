@@ -100,21 +100,46 @@ function askUser() {
       };
 
       const editTodo = () => {
-        readFile();
+        const jsonFileContents = fs.readFileSync("todo.json", "utf8");
+        const jsonData = JSON.parse(jsonFileContents);
+        let todoId = args[1];
+
+        let objIndex = jsonData.findIndex(
+          (obj) => obj.todoId.toString() == todoId
+        );
+        jsonData[objIndex].newTodo = inputStr;
+
+        const jsonString = JSON.stringify(jsonData, null, 2); // The `null, 2` parameters format the JSON with 2 spaces for indentation
+        fs.writeFile("todo.json", jsonString, "utf8", (err) => {
+          if (err) {
+            console.error("Error writing to the file:", err);
+            return;
+          }
+          console.log("File updated successfully");
+        });
       };
 
       const completeTodo = () => {
         const jsonFileContents = fs.readFileSync("todo.json", "utf8");
-        // Parse the JSON content into a JavaScript object
         const jsonData = JSON.parse(jsonFileContents);
-        let filtered = jsonData.filter((x) => x.todoId.toString() === args[1]);
-        console.log(filtered);
+        let todoId = args[1];
+        let filtered = jsonData.filter((x) => x.todoId.toString() == todoId);
+
+        let objIndex = jsonData.findIndex(
+          (obj) => obj.todoId.toString() == todoId
+        );
+        jsonData[objIndex].isCompleted = "Completed";
 
         if (filtered) {
-          filtered.isCompleted = "Completed";
+          filtered = [
+            {
+              todoId: filtered[0].todoId,
+              newTodo: filtered[0].newTodo,
+              isCompleted: "Completed",
+            },
+          ];
         }
-
-        const jsonString = JSON.stringify(filtered, null, 2); // The `null, 2` parameters format the JSON with 2 spaces for indentation
+        const jsonString = JSON.stringify(jsonData, null, 2); // The `null, 2` parameters format the JSON with 2 spaces for indentation
         fs.writeFile("todo.json", jsonString, "utf8", (err) => {
           if (err) {
             console.error("Error writing to the file:", err);
