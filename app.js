@@ -71,7 +71,6 @@ function askUser() {
           console.log("todo item cannot be empty");
         }
 
-        // Convert the JSON object to a JSON string
         const jsonString = JSON.stringify(todos, null, 2); // The `null, 2` parameters format the JSON with 2 spaces for indentation
 
         fs.writeFile("todo.json", jsonString, "utf8", (err) => {
@@ -121,22 +120,12 @@ function askUser() {
         const jsonFileContents = fs.readFileSync("todo.json", "utf8");
         const jsonData = JSON.parse(jsonFileContents);
         let todoId = args[1];
-        let filtered = jsonData.filter((x) => x.todoId.toString() == todoId);
 
         let objIndex = jsonData.findIndex(
           (obj) => obj.todoId.toString() == todoId
         );
         jsonData[objIndex].isCompleted = "Completed";
 
-        if (filtered) {
-          filtered = [
-            {
-              todoId: filtered[0].todoId,
-              newTodo: filtered[0].newTodo,
-              isCompleted: "Completed",
-            },
-          ];
-        }
         const jsonString = JSON.stringify(jsonData, null, 2); // The `null, 2` parameters format the JSON with 2 spaces for indentation
         fs.writeFile("todo.json", jsonString, "utf8", (err) => {
           if (err) {
