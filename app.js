@@ -146,7 +146,7 @@ function askUser() {
       const deleteTodo = () => {
         const jsonFileContents = fs.readFileSync("todo.json", "utf8");
         const jsonData = JSON.parse(jsonFileContents);
-        let filtered = jsonData.filter((x) => x.todoId.toString() !== inputStr);
+        let filtered = jsonData.filter((x) => x.todoId.toString() !== args[1]);
         console.log(filtered);
 
         const jsonString = JSON.stringify(filtered, null, 2); // The `null, 2` parameters format the JSON with 2 spaces for indentation
