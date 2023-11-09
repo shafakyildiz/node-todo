@@ -84,9 +84,7 @@ function askUser() {
       };
 
       const listTodo = () => {
-        // Read the JSON file
         const jsonFileContents = fs.readFileSync("todo.json", "utf8");
-        // Parse the JSON content into a JavaScript object
         const jsonData = JSON.parse(jsonFileContents);
         if (secondArg === "complete") {
           let filtered = jsonData.filter((x) => x.isCompleted === "Completed");
@@ -151,7 +149,6 @@ function askUser() {
 
       const searchTodo = () => {
         const jsonFileContents = fs.readFileSync("todo.json", "utf8");
-        // Parse the JSON content into a JavaScript object
         const jsonData = JSON.parse(jsonFileContents);
         let found = jsonData.find((el) => el.newTodo.includes(inputStr));
         console.log(found);
@@ -159,7 +156,6 @@ function askUser() {
 
       const deleteTodo = () => {
         const jsonFileContents = fs.readFileSync("todo.json", "utf8");
-        // Parse the JSON content into a JavaScript object
         const jsonData = JSON.parse(jsonFileContents);
         let filtered = jsonData.filter((x) => x.todoId.toString() !== inputStr);
         console.log(filtered);
